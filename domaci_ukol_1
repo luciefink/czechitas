@@ -1,0 +1,31 @@
+#Stáhni si knížku Alice’s Adventures in Wonderland od Lewise Carrolla (soubor alice.txt, nachází se ve stejné složce jako toto zadání) a spočítejte četnost všech písmen (velká písmena převeďte na malá) a znaků.
+#Řešení ulož ve formátu CSV (každý řádek obsahuje písmeno a počet jeho výskytů, oboje je odděleno středníkem). Pro kontrolu můžeš použít soubor output_1.csv. Zkus výstup svého programu připravit tak, aby byl co nejblíže vzorovému výstupu (včetně seřazení hodnot). Do výpočtu nezahrnuj počet zalomení řádků (\n), který by v něm dělal neplechu, a počet mezer, které nejsou zajímavé.
+#Výsledek bude akceptovatelný i v případě, že písmena nebudou seřazená, zkus ale prosím řazení do programu přidat. Postup jsme se na žádné lekci neukazovali, ale pokud použiješ Google, najdeš řadu rad a článků, které ukrazují řešení.
+
+with open ('alice.txt', encoding = 'utf-8') as vstup:
+    text = vstup.readlines()
+
+text = [radek.strip() for radek in text]
+text_lower = [x.lower() for x in text]
+text_lower = [radek.split() for radek in text_lower]
+
+freqs = {}
+for line in text_lower:
+  for slovo in line:
+      for char in slovo:
+            if char in freqs:
+                freqs[char] += 1
+            else:
+                freqs[char] = 1
+
+vysledek = [] 
+for key, val in freqs.items(): 
+    vysledek.append([key, val]) 
+
+from operator import itemgetter
+vysledek2 = (sorted(vysledek, key=itemgetter(0)))
+
+import csv
+with open('cetnost_znaku.csv', 'w', encoding='UTF8', newline='') as vystup:
+    writer = csv.writer(vystup, delimiter=';')
+    writer.writerows(vysledek2)
