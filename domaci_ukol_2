@@ -1,0 +1,43 @@
+import csv
+import json
+tsv_data = []
+with open("netflix_titles.tsv", encoding="utf-8") as vstup:
+  tsv_file = csv.reader(vstup, delimiter="\t")
+  tsv_labels = tsv_file.__next__()
+   
+  for record in tsv_file:
+        tsv_data.append(record)
+  print(tsv_labels, '\n')
+  print(tsv_data[0:10],'\n')
+
+zahlavi = ['title', 'directors', 'cast', 'genres', 'decade']
+tsv_data = [[x[2],x[15],x[16],x[8],x[5]] for x in tsv_data]
+
+seznam_filmu = []
+for film in tsv_data:
+  d1=zip(zahlavi,film)
+  slovniky_filmu = dict(d1)
+  seznam_filmu.append(slovniky_filmu)
+
+seznam_filmu2 = []
+for film in seznam_filmu:
+    film['decade'] = int(film['decade'])-int(film['decade'])%10
+    film['directors'] = film['directors'].split(",")
+    film['cast'] = film['cast'].split(",") 
+    film['genres'] = film['genres'].split(",")    
+    if film['directors'] == [""]:
+      film['directors'] *= 0
+    if film['cast'] == [""]:
+      film['cast'] *= 0
+    seznam_filmu2.append(film)
+
+seznam_filmu3 = []
+for film in seznam_filmu2:
+  film["cast"] = [x.strip() for x in film["cast"]]
+  film["directors"] = [x.strip() for x in film["directors"]]
+  seznam_filmu3.append(film)
+
+print(seznam_filmu3)
+
+with open("seznam_filmu.json", "w", encoding = "utf-8") as soubor:
+    json.dump(seznam_filmu3, soubor, indent=4, ensure_ascii=False)
